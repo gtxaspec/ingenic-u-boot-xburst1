@@ -1150,6 +1150,27 @@ static struct jz_spi_support jz_spi_support_table[] = {
 		},
 	},
 	{
+		.name = "PY25Q256HB",
+		.id_manufactory = 0x852019,
+		.page_size = SIZE_256B,
+		.sector_size = SIZE_4KB,
+		.addr_size = 4,
+		.size = SIZE_32MB,
+		.quad_mode = {
+			.dummy_byte = 8,
+			.RDSR_CMD = CMD_RDSR_1,
+			.WRSR_CMD = CMD_WRSR_1,
+			.RDSR_DATE = 0x2, /* the data is write the spi status register for QE bit */
+			.RD_DATE_SIZE = 1,
+			.WRSR_DATE = 0x2, /* this bit should be the flash QUAD mode enable */
+			.WD_DATE_SIZE = 1,
+			.cmd_read = CMD_QUAD_READ,
+#ifdef CONFIG_JZ_SFC
+			.sfc_mode = TRAN_SPI_QUAD,
+#endif
+		},
+	},
+	{
 		.name = "GENERIC*8MB",
 		.id_manufactory = 0xbabe17,
 		.page_size = SIZE_256B,

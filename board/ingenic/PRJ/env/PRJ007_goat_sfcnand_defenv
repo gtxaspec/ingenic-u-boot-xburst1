@@ -1,0 +1,11 @@
+bootargs=console=ttyS1,115200n8 mem=64M@0x0 rmem=64M@0x4000000 init=/linuxrc ubi.mtd=2 root=ubi0:rootfs rootfstype=ubifs rw mtdparts=sfc0_nand:1M(uboot),3M(kernel),20M(root),-(appfs)
+bootcmd=mtd read spi-nand0 ${kernel_addr_r} ${kernel_offset} ${kernel_size};bootm ${kernel_addr_r}
+ethaddr=86:2c:15:a3:48:da
+gatewayip=192.168.2.1
+ipaddr=192.168.2.121
+netmask=255.255.255.0
+serverip=10.3.34.180
+bootdelay=1
+kernel_addr_r=0x80a00000
+kernel_offset=0x100000
+kernel_size=0x300000

@@ -1,0 +1,141 @@
+/dts-v1/;
+
+#include "PRJ.dtsi"
+
+/ {
+	compatible = "ingenic,isvp", "ingenic,PRJ";
+
+mmc0_pwrseq: mmc0_pwrseq {
+		compatible = "mmc-pwrseq-sd";
+		power-gpios = <&gpb 27 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+		};
+};
+
+&uart0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pb>;
+};
+
+&uart1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pb>;
+};
+
+&uart2 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pc>;
+};
+
+&msc0 {
+	status = "okay";
+	pinctrl-names = "default", "active";
+	pinctrl-0 = <&msc0_pb_lolvl>;
+	pinctrl-1 = <&msc0_pb_func0>;
+	cap-mmc-highspeed;
+	non-removable;
+	max-frequency = <25000000>;
+	bus-width = <4>;
+	voltage-ranges = <1800 3300>;
+
+	/* special property */
+	wp-gpios = <0>;
+	cd-gpios = <0>;
+	rst-gpios = <0>;
+	mmc-pwrseq = <&mmc0_pwrseq>;
+
+};
+
+&msc1 {
+	status = "disable";
+	pinctrl-names = "default";
+	pinctrl-0 = <&msc1_pc>;
+	cap-mmc-highspeed;
+	non-removable;
+	max-frequency = <25000000>;
+	bus-width = <4>;
+	voltage-ranges = <1800 3300>;
+
+	/* special property */
+	ingenic,wp-gpios = <0>;
+	ingenic,cd-gpios = <0>;
+	ingenic,rst-gpios = <0>;
+};
+
+&sfc {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&sfc0_pa>;
+	ingenic,use_ofpart_info  = /bits/ 8 <0>; /* 当=<1>时(启用): 从设备树(Device Tree)中的 partitions 节点读取分区表信息 */
+	ingenic,spiflash_param_offset = <0>;
+
+	norflash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <25000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <1>;
+	};
+
+	nandflash@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <25000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <1>;
+	};
+
+};
+
+&mac0 {
+	pinctrl-names = "default", "reset";
+	pinctrl-0 = <&mac0_rmii_p0_normal>, <&mac0_rmii_p1_normal>;
+	pinctrl-1 = <&mac0_rmii_p0_rst>, <&mac0_rmii_p1_normal>;
+	status = "okay";
+	/* ingenic,reset-gpio = <&gpb 26 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>; */
+	phy-handle = <&ethphy>;
+	phy-mode = "rmii";
+	max-speed = <100>;
+	macphy-rate = <25000000>;
+
+	mdio {
+		compatible = "snps,dwmac-mdio";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy: ethernet-phy@0 {
+			reg= <0>;
+		};
+	};
+
+};
+
+&extclk {
+	clock-frequency = <24000000>;
+};
+
+&gpa {
+	ingenic,gpio-sleep-pullup 	= <>;
+	ingenic,gpio-sleep-pulldown 	= <>;
+	ingenic,gpio-sleep-hiz		= <26>;
+	ingenic,gpio-sleep-low		= <>;
+	ingenic,gpio-sleep-high		= <>;
+};
+
+&gpb {
+	ingenic,gpio-sleep-pullup 	= <>;
+	ingenic,gpio-sleep-pulldown 	= <>;
+	ingenic,gpio-sleep-hiz		= <14>;
+	ingenic,gpio-sleep-low		= <>;
+	ingenic,gpio-sleep-high		= <>;
+};
+
+&gpc {
+	ingenic,gpio-sleep-pullup 	= <>;
+	ingenic,gpio-sleep-pulldown 	= <>;
+	ingenic,gpio-sleep-hiz		= <>;
+	ingenic,gpio-sleep-low		= <>;
+	ingenic,gpio-sleep-high		= <>;
+};

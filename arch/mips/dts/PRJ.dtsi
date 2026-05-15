@@ -1,0 +1,192 @@
+#include <dt-bindings/clock/ingenic-clk-PRJ.h>
+#include <dt-bindings/gpio/ingenic-gpio.h>
+#include <dt-bindings/net/ingenic-gmac.h>
+#include <dt-bindings/pinctrl/ingenic-pinctrl.h>
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+	compatible = "ingenic,PRJ";
+
+	aliases {
+		mmc0 = &msc0;
+		mmc1 = &msc1;
+	};
+
+	cpus: cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			compatible = "ingenic,xburst";
+			reg = <0x000>;
+			clock-frequency = <800000000>;
+		};
+
+	};
+
+	core_ost: core-ost@0x12000000 {
+		compatible = "ingenic,PRJ-ost";
+		reg = <0x12000000 0x100>;
+	};
+
+
+	extclk: extclk {
+		compatible = "ingenic,fixed-clock";
+		clock-output-names ="ext";
+		#clock-cells = <0>;
+		clock-frequency  = <24000000>;
+	};
+
+	rtcclk: rtcclk {
+		compatible = "ingenic,fixed-clock";
+		clock-output-names ="rtc_ext";
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+	};
+
+	apb {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <>;
+
+		clock: clock-controller@0x10000000 {
+			compatible = "ingenic,PRJ-clocks";
+			reg = <0x10000000 0x100>;
+			clocks = <&extclk>, <&rtcclk>;
+			clock-names = "ext", "rtc_ext";
+			#clock-cells = <1>;
+			little-endian;
+		};
+
+		watchdog: watchdog@0x10002000 {
+			compatible = "ingenic,watchdog";
+			reg = <0x10002000 0x40>;
+			status = "okay";
+		};
+
+		pinctrl: pinctrl@0x10010000 {
+			compatible = "ingenic,PRJ-pinctrl";
+			reg = <0x10010000 0x1000>;
+			ingenic,num-chips = <4>;
+			ingenic,regs-offset = <0x1000>;
+
+			gpa: gpa {
+				gpio-controller;
+				#gpio-cells = <3>;
+				#ingenic,pincfg-cells = <3>;
+				#ingenic,pinmux-cells = <2>;
+				/* ingenic,num-gpios = <32>; */
+				ingenic,pull-gpios = <0xffffffff>;
+			};
+
+			gpb: gpb {
+				gpio-controller;
+				#gpio-cells = <3>;
+				#ingenic,pincfg-cells = <3>;
+				#ingenic,pinmux-cells = <2>;
+				/* ingenic,num-gpios = <32>; */
+				ingenic,pull-gpios = <0xffffffff>;
+			};
+
+			gpc: gpc {
+				gpio-controller;
+				#gpio-cells = <3>;
+				#ingenic,pincfg-cells = <3>;
+				#ingenic,pinmux-cells = <2>;
+				/* ingenic,num-gpios = <32>; */
+				ingenic,pull-gpios = <0xffffffff>;
+			     };
+
+			};
+
+		uart0: serial@0x10030000 {
+			compatible = "ingenic,uart";
+			reg = <0x10030000 0x100>;
+			reg-shift = <2>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+
+		uart1: serial@0x10031000 {
+			compatible = "ingenic,uart";
+			reg = <0x10031000 0x100>;
+			reg-shift = <2>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+
+		uart2: serial@0x10032000 {
+			compatible = "ingenic,uart";
+			reg = <0x10032000 0x100>;
+			reg-shift = <2>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+
+		uart3: serial@0x10033000 {
+			compatible = "ingenic,uart";
+			reg = <0x10033000 0x100>;
+			reg-shift = <2>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+	};
+
+	ahb2 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <>;
+
+		msc0: msc@0x13060000 {
+			compatible = "ingenic,sdhci";
+			reg = <0x13060000 0x10000>;
+			status = "disable";
+		};
+
+		msc1: msc@0x13070000 {
+			compatible = "ingenic,sdhci";
+			reg = <0x13070000 0x10000>;
+			status = "disable";
+		};
+
+		sfc: sfc@0x13440000 {
+			compatible = "ingenic,PRJ-sfc";
+			reg = <0x13440000 0x10000>;
+			clock-names = "sfc";
+			spi-max-frequency = <50000000>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+
+		mac0: mac@0x134b0000 {
+			compatible = "ingenic,gmac", "snps,dwmac-3.72a";
+			reg = <0x134b0000 0x2000>;
+			status="disabled";
+			ingenic,mode-reg = <0x100000e8>;
+			ingenic,rst-ms = <10>;
+		};
+	};
+
+	ahb1 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <>;
+
+	};
+
+	ahb0 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <>;
+
+	};
+
+};
+
+#include "PRJ-pinctrl.dtsi"

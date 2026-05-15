@@ -1,0 +1,60 @@
+if SOC_PRJ
+
+config SYS_BOARD
+	default "PRJ"
+
+config SYS_CONFIG_NAME
+	default "PRJ"
+
+config PRJ
+	def_bool y
+
+config SYS_APLL_FREQ
+	int "apll frequency"
+	default 1200000000
+	help
+	 If APLL not use mast be set 0
+
+config SYS_MPLL_FREQ
+	int "mpll frequency"
+	default 900000000
+	help
+	 If MPLL not use mast be set 0
+
+config SYS_VPLL_FREQ
+	int "vpll frequency"
+	default 1188000000
+	help
+	 If VPLL not use mast be set 0
+
+config SYS_CPU_FREQ
+	int "cpu frequency"
+	default 1200000000
+
+
+config SYS_MEM_FREQ
+	int "ddr frequency"
+	default 450000000
+
+
+config SYS_EXTAL
+	int
+	default 24000000        #EXTAL freq: 24 MHz
+
+# config SYS_TIMER_RATE
+	# int
+	# default 24000000        #EXTAL freq: 24 MHz
+
+config SYS_HZ
+	int
+	default 1000            #incrementer freq
+
+config SYS_UART_INDEX
+	int "### uart index"
+	default 1
+
+config BAUDRATE
+	int
+	default 115200
+
+endif

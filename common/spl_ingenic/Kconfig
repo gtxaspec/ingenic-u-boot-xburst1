@@ -1,0 +1,91 @@
+menuconfig INGENIC_SPL
+	bool "Ingenic SPL Boot options"
+	depends on SPL_FRAMEWORK
+
+if INGENIC_SPL
+choice
+	prompt "SPL Boot Medium Select"
+	default SPL_MMC_SUPPORT
+
+config SPL_MMC_SUPPORT
+	bool "SPL MMC Boot"
+
+
+config SPL_SFC_SUPPORT
+	bool "SPL SFC Boot"
+
+endchoice
+
+
+if SPL_MMC_SUPPORT
+choice
+	prompt "MSC Controller Select"
+	default SPL_JZ_MSC0
+
+config SPL_JZ_MSC0
+	bool "MSC Controller 0"
+
+config SPL_JZ_MSC1
+	bool "MSC Controller 1"
+
+endchoice
+
+
+choice
+	prompt "MSC Bus Width Select"
+
+config SPL_JZ_MSC_BUS_1BIT
+	bool "MSC 1-bit bus width"
+
+config SPL_JZ_MSC_BUS_4BIT
+	bool "MSC 4-bit bus width"
+
+config SPL_JZ_MSC_BUS_8BIT
+	bool "MSC 8-bit bus width"
+
+endchoice
+
+config SPL_JZ_MSC_DMA_ENABLE
+	bool "MSC DMA Enable"
+
+config JZ_MMC_MSC0_PB_4BIT
+	bool "MSC0 Used GPIOB"
+	depends on SPL_JZ_MSC0
+
+config JZ_MMC_MSC1_PC
+	bool "MSC1 Used GPIOC"
+	depends on SPL_JZ_MSC1
+
+config STORAGE_REDUCE_MMC
+	bool "Skip MMC detection"
+
+config STORAGE_REDUCE_SD
+	bool "Skip SD detection"
+
+config GPT_TAB_BUILT_IN
+	bool
+	depends on SPL_MMC_SUPPORT && SPL_OS_BOOT
+	default y
+
+config GPT_CREATOR
+	bool
+	default y
+
+endif #SPL_MMC_SUPPORT
+
+if SPL_SFC_SUPPORT
+choice
+	prompt "SFC Flash Type Select"
+	default SPL_SFC_NOR_SUPPORT
+
+config SPL_SFC_NOR_SUPPORT
+	bool "SPL SFC NOR Boot"
+
+config SPL_SFC_NAND_SUPPORT
+	bool "SPL SFC NAND Boot"
+
+endchoice
+endif #SPL_SFC_SUPPORT
+
+
+endif #INGENIC_SPL

@@ -1,0 +1,11 @@
+bootargs=console=ttyS1,115200n8 mem=64M@0x0 rmem=64M@0x4000000 init=/linuxrc rootfstype=squashfs root=/dev/mtdblock2 rw mtdparts=sfc0_nor:512k(boot),2560k(kernel),2048k(root),-(appfs)
+bootcmd=sf probe; sf read ${kernel_addr_r} ${kernel_offset} ${kernel_size}; bootm ${kernel_addr_r}
+ethaddr=86:2c:15:a3:48:da
+gatewayip=192.168.2.1
+ipaddr=192.168.2.121
+netmask=255.255.255.0
+serverip=10.3.34.180
+bootdelay=1
+kernel_addr_r=0x80a00000
+kernel_offset=0x80000
+kernel_size=0x280000

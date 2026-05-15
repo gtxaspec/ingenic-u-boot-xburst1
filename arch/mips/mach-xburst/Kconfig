@@ -1,0 +1,38 @@
+menu "Ingenic Xburst platforms"
+	depends on ARCH_XBURST
+
+config SYS_VENDOR
+	default "ingenic"
+
+config SYS_SOC
+        default "PRJ" if SOC_PRJ
+
+choice
+	prompt "Ingenic Xburst SoC select"
+
+config SOC_PRJ
+	bool "PRJ"
+	select SYS_CACHE_SHIFT_5
+	select SYS_MIPS_CACHE_INIT_RAM_LOAD
+	select PINCTRL_INGENIC
+	# select INGENIC_SERIAL
+	select MISC
+	select SPL_SEPARATE_BSS if SPL
+	select SPL_LOADER_SUPPORT if SPL
+	select SPL_OF_CONTROL if SPL_DM
+	select SPL_OF_PLATDATA if SPL_DM
+	select SPL_DM_SERIAL if SPL_DM
+	help
+	  This supports Ingenic PRJ.
+
+endchoice
+
+source "arch/mips/mach-xburst/PRJ/Kconfig"
+
+config WARN_ERROR
+    bool "Treat warnings as errors"
+    default y
+    help
+      If enabled, all compiler warnings will be treated as errors.
+
+endmenu

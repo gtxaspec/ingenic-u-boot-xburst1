@@ -1,0 +1,48 @@
+menuconfig INGENIC_TOOLS
+	bool "Ingenic Tools"
+	default y
+	imply INGENIC_TOOL_SPL_PARAMS_FIXER
+	imply INGENIC_TOOL_SPI_CHECKSUM
+	imply INGENIC_TOOL_DDR_CREATOR
+	imply INGENIC_TOOL_CLK_PARAMS_CREATOR
+	imply INGENIC_TOOL_PLL_PARAMS_CREATOR
+	imply INGENIC_TOOL_SFC_TOOLS
+	imply INGENIC_TOOL_MMC_TOOLS
+
+if INGENIC_TOOLS
+
+
+config INGENIC_TOOL_SPL_PARAMS_FIXER
+	bool "Enable ingenic tool spl_params_fixer"
+
+config INGENIC_TOOL_SPL_CHECKSUM
+	bool "Enable ingenic tool spl_checksum"
+
+config INGENIC_TOOL_MMC_TOOLS
+	bool "Enable ingenic tool mmc_tools"
+	depends on SPL_MMC_SUPPORT
+
+config INGENIC_TOOL_CLK_PARAMS_CREATOR
+	bool "Enable ingenic tool clk_params_creator"
+
+config INGENIC_TOOL_PLL_PARAMS_CREATOR
+	bool "Enable ingenic tool pll_params_creator"
+
+config INGENIC_TOOL_DDR_CREATOR
+	bool "Enable ingenic tool ddr_creator"
+	help
+	  Enable ingenic tool ddr_creator
+	  to generate include/generated/ddr_reg_values.h file
+
+# 需要使用吗？
+config INGENIC_TOOL_SFC_TOOLS
+	bool "Enable ingenic tool sfc_tools"
+	depends on SPL_SFC_NAND_SUPPORT || SPL_SFC_NOR_SUPPORT
+	help
+	  Enable ingenic tool sfc_tools
+	  to generate "sfc_nand_params.h" and "sfc_timing_val.h" file in include/generated/
+
+config INGENIC_TOOL_SPL_PAD_TO_BLOCK
+	bool "Enable ingenic toolspl pad to block"
+
+endif

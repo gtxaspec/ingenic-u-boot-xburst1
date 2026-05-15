@@ -1,0 +1,199 @@
+if SOC_PRJ
+
+config SYS_DCACHE_SIZE
+    default 32768    #(32K)
+
+config SYS_DCACHE_LINE_SIZE
+    default 32
+
+config SYS_DCACHE_WAYS
+    default 8
+
+config SYS_ICACHE_SIZE
+    default 32768    #(32K)
+
+config SYS_ICACHE_LINE_SIZE
+    default 32
+
+config SYS_ICACHE_WAYS
+        default 8
+
+config SYS_SCACHE_SIZE
+    default 131072    #(128K)
+
+config SYS_SCACHE_LINE_SIZE
+        default 32
+
+config SYS_SCACHE_WAYS
+        default 8
+
+config BOARD_SCACHE
+    def_bool y
+
+config SPL_TEXT_BASE
+    default 0x80001000
+
+config SPL_BSS_START_ADDR
+    default 0x8001f000
+
+config SPL_SIZE_LIMIT
+    hex
+    default 0x19000 #(100K)
+
+config MAX_MEM_SIZE
+    int
+    default 256
+
+config SYS_TEXT_BASE
+        hex
+    default 0x80400000
+
+
+config SOCID_ADDRESS
+        hex
+    default 0xb300002c
+
+config SOCID_PRJ007
+        hex
+    default 0x10032004
+
+config SOCID_PRJ008
+        hex
+    default 0x10033004
+
+
+choice
+    prompt "PRJ SoC Select"
+    default PRJ008
+
+config PRJ007
+        bool "PRJ007 Series"
+
+config PRJ008
+        bool "PRJ008 Series"
+endchoice
+
+choice
+    prompt "PRJ SoC Type Select"
+    default PRJ_NQ
+
+config PRJ_N
+        bool "PRJ-N"
+        depends on PRJ008
+
+config PRJ_NQ
+        bool "PRJ-NQ"
+        depends on PRJ007
+
+config PRJ_ZN
+        bool "PRJ-ZN"
+        depends on PRJ008 || PRJ007
+
+config PRJ_VN
+        bool "PRJ-VN"
+        depends on PRJ008 || PRJ007
+
+config PRJ_VNP
+        bool "PRJ-VNP"
+        depends on PRJ008 || PRJ007
+
+config PRJ_XQ
+        bool "PRJ-XQ"
+        depends on PRJ007
+
+config PRJ_ZX
+        bool "PRJ-ZX"
+        depends on PRJ007
+
+config PRJ_VX
+        bool "PRJ-VX"
+        depends on PRJ007
+
+config PRJ_L
+        bool "PRJ-L"
+        depends on PRJ008
+
+config PRJ_DL
+        bool "PRJ-DL"
+        depends on PRJ008
+
+config PRJ_LQ
+        bool "PRJ-LQ"
+        depends on PRJ007
+
+config PRJ_ZL
+        bool "PRJ-ZL"
+        depends on PRJ008 || PRJ007
+
+config PRJ_VL
+        bool "PRJ-VL"
+        depends on PRJ008 || PRJ007
+
+config PRJ_A
+        bool "PRJ-A"
+        depends on PRJ007
+
+endchoice
+
+
+config DDR_PARAMS_STRUCT
+    bool "Support multiple DDR (Dynamic Random Access Memory) types"
+    def_bool y
+
+menu "DDR Training Config"
+    comment "Select training method(s)"
+
+config DDR_SOFT_TRAIN
+    bool "SOFT_TRAIN"
+
+config DDR_HARDWARE_TRAIN
+    bool "HARDWARE_TRAIN"
+endmenu
+
+menu "DDR Chip Model Select"
+    comment "Select one or more DDR models"
+
+config DDR3_W631GU6NG
+    tristate "DDR3 W631GU6NG"
+
+config DDR3_NK5CC64M16HQ3
+    tristate "DDR3 NK5CC64M16HQ3"
+
+config DDR3_W632GU6NG
+    tristate "DDR3 W632GU6NG"
+
+config DDR2_W9751V6NG
+    tristate "DDR2 W9751V6NG"
+
+config DDR2_M14D5121632A
+    tristate "DDR2 M14D5121632A"
+
+config LPDDR3_W63AH6N2B_BJ
+    tristate "LPDDR3 W63AH6N2B-BJ"
+
+endmenu
+
+
+menu "DDR Type Select"
+    comment "Select DDR type(s)"
+
+config DDR_TYPE_DDR3
+    bool "DDR3"
+    depends on DDR3_W631GU6NG || DDR3_NK5CC64M16HQ3 || DDR3_W632GU6NG
+
+config DDR_TYPE_DDR2
+    bool "DDR2"
+    depends on DDR2_W9751V6NG || DDR2_M14D5121632A
+
+
+config DDR_TYPE_LPDDR3
+    bool "LPDDR3"
+	depends on LPDDR3_W63AH6N2B_BJ
+
+endmenu
+
+
+
+source "board/ingenic/PRJ/Kconfig"
+
+endif

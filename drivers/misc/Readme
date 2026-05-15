@@ -1,0 +1,44 @@
+﻿测试举例
+1、aes驱动：
+openssl enc  -aes-128-cbc -in aes_test.bin -out encrypt_cbc.bin -K f72298f579fe33cc99fc312e1c2be229 -iv 99fc312e1c2be2292e008f259d0162eb
+传入aes_test.bin数据，输出的数据和encrypt_cbc.bin一致
+
+代码举例：
+   uint32_t aes_key[4] = {0xf72298f5, 0x79fe33cc, 0x99fc312e, 0x1c2be229};
+   uint32_t aes_iv[4]  = {0x99fc312e, 0x1c2be229, 0x2e008f25, 0x9d0162eb};
+   uint32_t aes_out[68] = {0};
+   uint32_t padding[4] = {0x10101010,0x10101010,0x10101010,0x10101010};
+   struct jz_aes_device* jz_aes =get_jz_aes();
+   jz_aes->init_aes(aes_iv,aes_key,ENC_CBC);
+   jz_aes->aes_update(CONFIG_DECMP_BUFFER_ADRS,64,aes_out);
+   jz_aes->aes_update(padding,4,aes_out+64);
+   jz_aes->aes_final();
+
+
+2、hash驱动：
+传入数据，输出的数据和sha256sum的一致
+
+代码举例：
+  struct jz_hash_device* jz_hash =get_hash_device();
+  jz_hash->init_hash();
+  memset((void *)CONFIG_SYS_TEXT_BASE, 0, 520);
+  jz_hash->sha256_update(CONFIG_DECMP_BUFFER_ADRS, 520);  //输入数据
+  jz_hash->sha256_final(CONFIG_SYS_TEXT_BASE);   //输出
+
+
+3、rsa驱动
+openssl genrsa -out private_key.pem 2048
+openssl rsa -in private_key.pem -pubout -out public_key.pem   //openssl 生成一对公钥和私钥
+echo -n "Hello, World!" | openssl dgst -sha256 -binary > message.sha256   //获得明文的sha256值
+openssl pkeyutl -sign -in message.sha256 -inkey private_key.pem -pkeyopt digest:sha256 -pkeyopt rsa_padding_mode:pss  \
+           -pkeyopt rsa_pss_saltlen:32 -out signature.sha256    //用私钥对该sha256做PSS签名
+openssl rsautl -verify -in signature.sha256 -inkey public_key.pem -pubin -raw -out decrypted_data.bin  //公钥解密
+
+代码举例：
+   struct jz_rsa_device* jz_rsa = get_jz_rsa();
+   unsigned int rsa_dec[64] ={0};
+   jz_rsa->init_rsa();
+   jz_rsa->do_rsa_2048(ModN, 65537, Enc, rsa_dec, 64); 
+   jz_rsa->deinit_rsa();
+其中ModN可以通过：echo | openssl rsa -in public_key.pem -pubin -modulus -text查看
+Enc即为上述signature.sha256  解密出来的rsa_dec处数据和openssl公钥解密的decrypted_data.bin一致

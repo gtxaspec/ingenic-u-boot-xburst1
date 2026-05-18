@@ -28,20 +28,12 @@ static int erase_config_partition_from_mtdparts(void)
 		return CMD_RET_FAILURE;
 	}
 
-	/* mtdparts value (usually will include a "setenv mtdparts" prefix):
-	* "setenv mtdparts mtdparts=jz_sfc:256k(boot),64k(env),192k(config),${kern_size_dec}(kernel),${rootfs_size}(rootfs),-(rootfs_data)${update}"
+	/* reading mtdparts value will give something like:
+	* "jz_sfc:256k(boot),64k(env),192k(config),${kern_size_dec}(kernel),${rootfs_size}(rootfs),-(rootfs_data)${update}"
 	*
-	* We first locate the substring "mtdparts=".
+	* Skip the device name: find the colon.
 	*/
-	const char *parts_str = strstr(mtdparts, "mtdparts=");
-	if (!parts_str) {
-		printf("RST:   Error: mtdparts format invalid.\n");
-		return CMD_RET_FAILURE;
-	}
-	parts_str += strlen("mtdparts=");
-
-	/* Skip the device name: find the colon */
-	const char *p = strchr(parts_str, ':');
+	const char *p = strchr(mtdparts, ':');
 	if (!p) {
 		printf("RST:   Error: mtdparts missing colon separator.\n");
 		return CMD_RET_FAILURE;
